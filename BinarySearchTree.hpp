@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <queue>
+#include <utility>
 using namespace std;
 
 template <typename T> string toStr(const T &value) {
@@ -113,6 +115,40 @@ public:
 
   string BFT() const {
     string st;
+    queue<pair<int, BinaryNode* >>q;
+    pair<int, BinaryNode* > frontPair;
+    int level = 0;
+
+  if(root!=NULL) {
+    q.push({0, root});
+
+    cout << "[";
+    cout << "[";
+    while(!q.empty()) {
+      frontPair = q.front();
+      BinaryNode *f = frontPair.second;
+      int cur = frontPair.first;
+      q.pop();
+      
+      if(level != cur) {
+        cout << "],[";
+        level = cur;
+      }
+
+      if (f != nullptr) {
+        cout << f->element << ",";
+      }
+
+      if (f->left  != nullptr) {
+        q.push({level + 1, f->left});
+      }
+      if (f->right != nullptr){
+        q.push({level + 1, f->right});
+      }
+    }
+  }
+    cout << "]";
+    cout << "]";
     return st;
   }
 
