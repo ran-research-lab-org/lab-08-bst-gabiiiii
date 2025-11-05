@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <queue>
+#include <utility>
 using namespace std;
 
 template <typename T> string toStr(const T &value) {
@@ -113,6 +115,41 @@ public:
 
   string BFT() const {
     string st;
+    int level = 0;  //last level    
+    queue<pair<int, BinaryNode* >> q; //queue q of pairs
+    
+    //insert root to q
+    q.push({0, root});
+
+    //while q is not empty
+    while(!q.empty()) {
+      auto u = q.front(); q.pop(); // u = level of current node
+
+      //case is which level is 0 (root)
+      if (u.first == 0) { 
+        st = "[[" + toStr(u.second->element);
+      }
+      else if (level < u.first) { //last level < current level
+        st += "],[" + toStr(u.second->element);
+      }
+      else if (level == u.first) { //last level == current level
+        st += "," + toStr(u.second->element);
+      }
+
+      //in the followeing, u is updated to current level + 1
+      if (u.second->left != nullptr){ //if left ptr is not null
+        q.push({u.first + 1, (u.second)->left}); //push current level + 1 and left pointer
+      }
+
+      if (u.second->right != nullptr) { //if right ptr is not null
+        q.push({u.first + 1, (u.second)->right}); //pus current level + 1 and right pointer 
+      }
+
+      level = u.first; //last level = current level
+    }
+
+    st += "]]"; //finish string formatting
+    
     return st;
   }
 
