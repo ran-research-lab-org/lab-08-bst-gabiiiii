@@ -115,40 +115,41 @@ public:
 
   string BFT() const {
     string st;
-    queue<pair<int, BinaryNode* >>q;
-    pair<int, BinaryNode* > frontPair;
-    int level = 0;
-
-  if(root!=NULL) {
+    int level = 0;  //last level    
+    queue<pair<int, BinaryNode* >> q; //queue q of pairs
+    
+    //insert root to q
     q.push({0, root});
 
-    cout << "[";
-    cout << "[";
+    //while q is not empty
     while(!q.empty()) {
-      frontPair = q.front();
-      BinaryNode *f = frontPair.second;
-      int cur = frontPair.first;
-      q.pop();
-      
-      if(level != cur) {
-        cout << "],[";
-        level = cur;
+      auto u = q.front(); q.pop(); // u = level of current node
+
+      //case is which level is 0 (root)
+      if (u.first == 0) { 
+        st = "[[" + toStr(u.second->element);
+      }
+      else if (level < u.first) { //last level < current level
+        st += "],[" + toStr(u.second->element);
+      }
+      else if (level == u.first) { //last level == current level
+        st += "," + toStr(u.second->element);
       }
 
-      if (f != nullptr) {
-        cout << f->element << ",";
+      //in the followeing, u is updated to current level + 1
+      if (u.second->left != nullptr){ //if left ptr is not null
+        q.push({u.first + 1, (u.second)->left}); //push current level + 1 and left pointer
       }
 
-      if (f->left  != nullptr) {
-        q.push({level + 1, f->left});
+      if (u.second->right != nullptr) { //if right ptr is not null
+        q.push({u.first + 1, (u.second)->right}); //pus current level + 1 and right pointer 
       }
-      if (f->right != nullptr){
-        q.push({level + 1, f->right});
-      }
+
+      level = u.first; //last level = current level
     }
-  }
-    cout << "]";
-    cout << "]";
+
+    st += "]]"; //finish string formatting
+    
     return st;
   }
 
